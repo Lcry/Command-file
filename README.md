@@ -23,3 +23,7 @@ mysqle版本：5.6.35<br>
 密码：123465<br>
 备份目录：/mysqlbak<br>
 
+# 3.命令名称：getwifipass<br>
+Windows下一条命令查看已连接过的wifi信息（包括密码）：<br>
+系统：win7.win8.win10<br>
+使用方法：windows下命令行输入命令即可<br>
