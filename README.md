@@ -1,4 +1,6 @@
 # Command-file
+脚本说明：
+带.sh支持linux使用，不带.sh为windows使用<br>
 脚本统一路径：
 https://raw.githubusercontent.com/Lcry/Command-file/master/（此处填脚本名）<br>
 例子：
@@ -27,3 +29,8 @@ mysqle版本：5.6.35<br>
 Windows下一条命令查看已连接过的wifi信息（包括密码）：<br>
 系统：win7.win8.win10<br>
 使用方法：windows下命令行输入命令即可<br>
+
+# 4.命令名称：pingscan<br>
+windows批量扫整个网段存活主机：<br>
+系统：win7.win8.win10<br>
+使用方法：新建txt文本,写入内容，改txt后缀为bat即可<br>
