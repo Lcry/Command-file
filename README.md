@@ -56,3 +56,8 @@ chkconfig --list oradb   # 查看是否成功<br>
 5）重启系统验证<br>
 执行reboot<br>
 
+# 6.命令名称：kitchen<br>
+kettle定时调度任务脚本：<br>
+kettle版本：5.0+<br>
+使用方法：请参考脚本注释<br>
+
