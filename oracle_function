@@ -1,0 +1,646 @@
+1.>>判断是否是国内电话号码，例如：028-88886666
+create FUNCTION F_Str_Is_Telephone(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是国内电话号码 扣分 ；返回 1 表示是国内电话号码 不扣分；例如：021-87888822
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^\d{3}-\d{8}|\d{4}-\d{7}$');
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Telephone;
+
+2.>>判断是否手机号码,依赖是否是纯数字函数,例如：15512341234
+create FUNCTION F_Str_Is_Phone(in_text IN VARCHAR2) RETURN number
+IS
+l_begin varchar2(1);
+l_str varchar2(2);
+l_phone varchar2(20);
+l_length number;
+l_number number;
+BEGIN
+           l_phone:=trim(in_text);--去掉前后空格
+           l_number:=F_Str_Is_Digit(l_phone);--是否是纯数字
+           l_begin:=substr(l_phone,0,1);--获取第一位
+           l_length:=length(l_phone);--获取长度
+                  IF l_number = 1 THEN
+                      IF l_begin = 1 THEN                   --1开头的数字可能是手机号码
+                                   IF l_length=11 THEN  --长度为11位,继续判断
+                                   BEGIN
+                                           --移动号段
+                                           SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^(134|135|136|137|138|139|147|150|151|152|157|158|159|182|183|184|187|188)') ;
+                                           RETURN 1;
+                                   EXCEPTION
+                                          WHEN NO_DATA_FOUND THEN
+                                                      BEGIN
+                                                                  --联通号段
+                                                                  SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^(130|131|132|155|156|185|186|176|145)') ;
+                                                                  RETURN 1;
+                                                      EXCEPTION
+                                                                  WHEN NO_DATA_FOUND THEN
+                                                                        BEGIN
+                                                                              --电信号段
+                                                                              SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^(133|153|180|181|189|177)') ;
+                                                                              RETURN 1;
+                                                                        EXCEPTION
+                                                                        WHEN NO_DATA_FOUND THEN
+                                                                        RETURN 0;
+                                                                  END;
+                                                               END;
+                              END;
+                            ELSE --长度没有11位,非法手机号码
+                              RETURN 0;
+                            END IF;
+                  ELSE
+                           RETURN 0;
+                  END IF;
+            ELSE  --含有非数字
+                RETURN 0;
+            END IF;
+END F_Str_Is_Phone;
+
+3.>>判断是否是邮箱。如：123456@qq.com
+create FUNCTION F_Str_Is_Mail(in_text IN VARCHAR2) RETURN number
+IS
+l_str varchar2(10);
+
+BEGIN
+  --0不是邮箱，扣分；1是邮箱，不扣分 
+  --是否是邮箱
+      BEGIN
+                SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$');
+                RETURN 1;
+        EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+             RETURN 0;
+        END;
+EXCEPTION
+        WHEN OTHERS THEN
+        RETURN 0;
+END     F_Str_Is_Mail;
+
+4.>>判断是否是纯数字，如：123456
+create FUNCTION F_Str_Is_Digit(in_text IN VARCHAR2) RETURN number
+IS
+l_str varchar2(10);
+--返回0不是纯数字扣分，返回1是纯数字不扣分
+BEGIN
+      BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[0123456789]+$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Digit;
+
+5.>>判断是否是时间格式，如：2018-06-26 14:29:10
+create FUNCTION f_is_date(parmin VARCHAR2) RETURN NUMBER IS
+  val DATE;
+BEGIN
+  --返回0不是时间格式扣分，返回1是时间格式不扣分
+  val := TO_DATE(NVL(parmin, 'a'), 'yyyy-mm-dd hh24:mi:ss');
+  RETURN 1;
+EXCEPTION
+  WHEN OTHERS THEN
+       RETURN 0;
+END;
+
+6.>>判断是否是整数，如：123
+create FUNCTION F_Str_Is_Integer(in_text IN VARCHAR2) RETURN number
+IS
+l_str varchar2(10);
+
+BEGIN
+  --0不是Integr类型，扣分；1是Integer类型，不扣分 
+  --是否是Integr类型
+      BEGIN
+                SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^(\+|\-){0,1}[0-9]+$');
+                RETURN 1;
+        EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+             RETURN 0;
+        END;
+EXCEPTION
+        WHEN OTHERS THEN
+        RETURN 0;
+END     F_Str_Is_Integer;
+
+7.>>判断数字是否是有小数，如：1.123
+create FUNCTION F_Str_Is_Double(in_text IN VARCHAR2) RETURN number
+IS
+l_str varchar2(10);
+
+BEGIN
+  --0不是Double类型，扣分；1是Double类型，不扣分 
+  --是否是Double类型
+      BEGIN
+                SELECT * INTO l_str FROM dual where REGEXP_LIKE(in_text,'^(\+|\-){0,1}[0-9]+\.[0-9]+$');
+                RETURN 1;
+        EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+             RETURN 0;
+        END;
+EXCEPTION
+        WHEN OTHERS THEN
+        RETURN 0;
+END     F_Str_Is_Double;
+
+8.>>判断是否有英文，如sad
+create FUNCTION F_Str_Is_English(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是纯字母 扣分 ；返回 1 表示是纯字母 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[A-Za-z]+$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_English;
+
+9.>>判断是否是英文数字下滑线，如sda_2
+create FUNCTION F_Str_Is_underline_numbers(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是由字母数子下划线 扣分 ；返回 1 表示是字母数子下划线 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[0-9A-Za-z\_]+$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_underline_numbers;
+
+10.>>判断是否是邮编，如：610000
+create FUNCTION F_Str_Is_Postcode(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不邮编 扣分 ；返回 1 表示是邮编 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[1-9]\d{5}$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Postcode;
+
+11.>>判断是否是域名,如:baidu.com
+create FUNCTION F_Str_Is_Domain(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是域名 扣分 ；返回 1 表示是域名 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Domain;
+
+12.>>判断是否是QQ，如：12345678
+create FUNCTION F_Str_Is_QQ(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是QQ 扣分 ；返回 1 表示是QQ 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^[1-9]([0-9]{4,10})$');
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+    RETURN 0;
+  END;
+END F_Str_Is_QQ;
+
+13.>>判断是否是ip地址，如：192.168.1.1
+create FUNCTION F_Str_Is_IP(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是ip地址 扣分 ；返回 1 表示是ip地址 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)$');
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+    RETURN 0;
+  END;
+END F_Str_Is_IP;
+
+14.>>判断是否是正整数，如123
+create FUNCTION F_Str_Is_Z_Int(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是正整数 扣分 ；返回 1 表示是是正整数 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^0*[1-9]\d*$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Z_Int;
+
+15.>>判断是否是正浮点数，如：25.01
+create FUNCTION F_Str_Is_Z_float(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是正浮点数 扣分 ；返回 1 表示是是正浮点数 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '^0*[1-9]\d*.\d+|0.\d*[1-9]\d*$'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_Z_float;
+
+16.>>判断前后是否有空格，如： 123 
+create FUNCTION F_Str_Is_Z_Blank(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示前后有空格 扣分 ；返回 1 表示前后没有空格 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '(^\s+)|(\s+$)'); 
+      RETURN 0;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 1;
+  END;
+END F_Str_Is_Z_Blank;
+
+17.>>判断是否由数字和字母组成，如：12sad
+create FUNCTION F_Str_Is_SE(in_text IN VARCHAR2) RETURN number
+       IS
+      l_str varchar2(10);
+BEGIN
+       --返回 0表示不是数字和字母成 扣分 ；返回 1 表示是数字和字母成 不扣分；
+         BEGIN
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '[A-Za-z]+');
+        SELECT * INTO l_str FROM dual where regexp_like(in_text, '[0-9]+'); 
+      RETURN 1;
+    EXCEPTION
+       WHEN NO_DATA_FOUND THEN 
+    RETURN 0;
+  END;
+END F_Str_Is_SE;
+
+18.>>判断是否是身份证，如：123456789123456789
+create FUNCTION f_checkidcard (p_idcard IN VARCHAR2) RETURN INT
+IS
+   v_regstr      VARCHAR2 (2000);
+   v_sum         NUMBER;
+   v_mod         NUMBER;
+   v_checkcode   CHAR (11)       := '10X98765432';
+   v_checkbit    CHAR (1);
+   v_areacode    VARCHAR2 (2000) := '11,12,13,14,15,21,22,23,31,32,33,34,35,36,37,41,42,43,44,45,46,50,51,52,53,54,61,62,63,64,65,71,81,82,91,';
+BEGIN
+   CASE LENGTHB (p_idcard)
+      WHEN 15
+      THEN                                                            -- 15位
+         IF INSTRB (v_areacode, SUBSTR (p_idcard, 1, 2) || ',') = 0 THEN
+            RETURN 0;
+         END IF;
+
+         IF MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 2)) + 1900, 400) = 0
+            OR
+            (
+                MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 2)) + 1900, 100) =  0
+                AND
+                MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 2)) + 1900, 4) = 0
+            )
+         THEN                                                          -- 闰年
+            v_regstr :=
+               '^[1-9][0-9]{5}[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}$';
+         ELSE
+            v_regstr :=
+               '^[1-9][0-9]{5}[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}$';
+         END IF;
+
+         IF REGEXP_LIKE (p_idcard, v_regstr) THEN
+            RETURN 1;
+         ELSE
+            RETURN 0;
+         END IF;
+      WHEN 18
+      THEN                                                             -- 18位
+         IF INSTRB (v_areacode, SUBSTRB (p_idcard, 1, 2) || ',') = 0 THEN
+            RETURN 0;
+         END IF;
+
+         IF MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 4)), 400) = 0
+            OR
+            (
+                MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 4)), 100) = 0
+                AND
+                MOD (TO_NUMBER (SUBSTRB (p_idcard, 7, 4)), 4) = 0
+            )
+         THEN                                                          -- 闰年
+            v_regstr :=
+               '^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}[0-9Xx]$';
+         ELSE
+            v_regstr :=
+               '^[1-9][0-9]{5}(19|20)[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}[0-9Xx]$';
+         END IF;
+
+         IF REGEXP_LIKE (p_idcard, v_regstr) THEN
+            v_sum :=
+                   (  TO_NUMBER (SUBSTRB (p_idcard, 1, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 11, 1))
+                   )
+                 * 7
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 2, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 12, 1))
+                   )
+                 * 9
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 3, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 13, 1))
+                   )
+                 * 10
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 4, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 14, 1))
+                   )
+                 * 5
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 5, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 15, 1))
+                   )
+                 * 8
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 6, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 16, 1))
+                   )
+                 * 4
+               +   (  TO_NUMBER (SUBSTRB (p_idcard, 7, 1))
+                    + TO_NUMBER (SUBSTRB (p_idcard, 17, 1))
+                   )
+                 * 2
+               + TO_NUMBER (SUBSTRB (p_idcard, 8, 1)) * 1
+               + TO_NUMBER (SUBSTRB (p_idcard, 9, 1)) * 6
+               + TO_NUMBER (SUBSTRB (p_idcard, 10, 1)) * 3;
+            v_mod := MOD (v_sum, 11);
+            v_checkbit := SUBSTRB (v_checkcode, v_mod + 1, 1);
+
+            IF v_checkbit = upper(substrb(p_idcard,18,1)) THEN
+               RETURN 1;
+            ELSE
+               RETURN 0;
+            END IF;
+         ELSE
+            RETURN 0;
+         END IF;
+      ELSE
+         RETURN 0;                                      -- 身份证号码位数不对
+   END CASE;
+EXCEPTION
+   WHEN OTHERS
+   THEN
+      RETURN 0;
+END fn_checkidcard;
+
+19.>>判断是否空表
+create FUNCTION F_IS_NULLTABLE(TABLENAME VARCHAR2) RETURN NUMBER
+IS
+  SQL_EXC VARCHAR2(2000);
+  ISNUM NUMBER;
+  ROW_NUM NUMBER;
+BEGIN
+    --返回0，是空表 扣分。1，不是空表 不扣分
+    ISNUM:=0;
+
+    IF TABLENAME IS NOT NULL THEN
+       SQL_EXC:='SELECT COUNT(1)  FROM '|| TABLENAME;
+        --执行SQL赋值变量。
+        execute immediate SQL_EXC into ROW_NUM;
+        IF ROW_NUM > 0 THEN
+           ISNUM:=1;
+        END IF;
+    END IF;
+    RETURN ISNUM;
+END;
+
+20.>>判断字段是否为数字型
+create FUNCTION F_IS_NUMBER(MyStr VARCHAR2) RETURN NUMBER
+IS
+  STR VARCHAR2(400);
+  ISNUM NUMBER;
+  NUM NUMBER;
+BEGIN
+    --返回0，不是数字,扣分。1，是数字，得分
+    ISNUM:=0;
+    STR:=TRIM(MyStr);
+    --如果输入值为空，就返回不是数字。
+    IF TRIM(STR)IS NOT NULL THEN
+    BEGIN
+        NUM:=TO_NUMBER(STR);
+        ISNUM:=1;
+        EXCEPTION
+         WHEN INVALID_NUMBER THEN
+            NULL;
+         WHEN OTHERS THEN
+            NULL;
+    END;
+    END IF;
+    RETURN ISNUM;
+END;
+
+21.>>判断字段是否为空
+create FUNCTION F_IS_CHECKI(ITEM VARCHAR2) RETURN NUMBER IS
+  ISNUM NUMBER;
+BEGIN
+
+  ISNUM := 0;
+
+  IF ITEM IS NOT NULL THEN
+    ISNUM := 1;
+  END IF;
+  RETURN ISNUM;
+END;
+
+22.>>判断是否有字母
+create FUNCTION F_Str_Have_English(in_text IN VARCHAR2) RETURN number
+       IS
+       l_num number;
+BEGIN
+       --返回 0表示有字母 扣分 ；返回 1 表示没字母 不扣分；
+       SELECT REGEXP_INSTR (lower(in_text),'[a-z]+') INTO l_num FROM DUAL;
+       IF l_num > 0 THEN
+              RETURN 0;
+        ELSE
+              RETURN 1;
+       END IF;
+END F_Str_Have_English;
+
+23.>>判断是否有数字
+create FUNCTION F_Str_Have_Numeric(in_text IN VARCHAR2) RETURN number
+IS
+l_num number;
+BEGIN
+    --返回 0表示有数字 扣分 ；返回 1 表示没数字 不扣分；
+    SELECT REGEXP_INSTR (in_text,'[0-9]+') INTO l_num FROM DUAL;
+    IF l_num > 0 THEN
+        RETURN 0;
+    ELSE
+        RETURN 1;
+    END IF;
+END F_Str_Have_Numeric;
+
+24.>>判断工号字段是否重复
+create FUNCTION F_TEACHER_CODRE(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是不存在 扣分项。1，存在 不扣分
+    --查询工号 字段在教职工基础数据子类表里面的工号字段是否重复
+    ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.GH) into EMP from DBCENTER.JZGJCSJZLB t where t.GH=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 1 THEN
+             ISNUM:=0;
+             ELSE
+               ISNUM:=1; 
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+25.>>判断学号字段是否重复
+create FUNCTION F_STUDENT_CODE(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是重复 扣分项。1，不重复 不扣分
+    --查询学号 字段在学生基本数据表里面的学号字段是否重复
+    ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.xh) into EMP from DBCENTER.XSJBSJZLB t where t.xh=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 1 THEN
+             ISNUM:=0;
+             ELSE
+               ISNUM:=1; 
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+26.>>判断是否有中文
+create FUNCTION F_IS_CHINESE(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是有中文 扣分项。1，没中文 不扣分
+    --查询ITEM 字段是否有中文存在
+       ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select (case when length(ITEM)= lengthb(ITEM) then 1 else 0 end) into EMP from dual;
+           --执行SQL赋值变量。
+           IF EMP > 0 THEN
+             ISNUM:=1;
+             ELSE
+               ISNUM:=0;
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+27.>>判断班级是否存在
+create FUNCTION F_CLASS_EXIST(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是不存在 扣分项。1，存在 不扣分
+    --查询ITEM 字段在班级表里面的id字段是否存在
+       ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.BH) into EMP from DBCENTER.BJSJLB t where t.BH=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 0 THEN
+             ISNUM:=1;
+             ELSE
+               ISNUM:=0;
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+28.>>判断部门是否存在
+create FUNCTION F_OFFICE_EXIST(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是不存在 扣分项。1，存在 不扣分
+    --查询ITEM 字段在部门表里面的dwh字段是否存在
+       ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.dwh) into EMP from dbcenter.dwjbsjzlb t where  t.dwh=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 0 THEN
+             ISNUM:=1;
+             ELSE
+               ISNUM:=0; 
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+29.>>判断教师是否存在
+create FUNCTION F_TEACHER_EXIST(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是不存在 扣分项。1，存在 不扣分
+    --查询ITEM 字段在教职工基础数据子类表里面的工号字段是否存在
+    ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.GH) into EMP from DBCENTER.JZGJCSJZLB t where t.GH=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 0 THEN
+             ISNUM:=1;
+             ELSE
+               ISNUM:=0; 
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
+
+30.>>判断学生是否存在
+create FUNCTION F_STUDENT_EXIST(ITEM VARCHAR2) RETURN NUMBER
+IS
+  EMP VARCHAR2(20);
+  ISNUM NUMBER;
+BEGIN
+    --返回0，是不存在 扣分项。1，存在 不扣分
+    --查询ITEM 字段在学生基本数据表里面的学号字段是否存在
+    ISNUM:=0;
+    IF  ITEM IS NOT NULL THEN
+           select count(t.xh) into EMP from DBCENTER.XSJBSJZLB t where t.xh=ITEM;
+           --执行SQL赋值变量。
+           IF EMP > 0 THEN
+             ISNUM:=1;
+             ELSE
+               ISNUM:=0; 
+             END IF;
+        END IF;
+    RETURN ISNUM;
+END;
