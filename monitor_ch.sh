@@ -38,7 +38,8 @@ then
 
 # 定义变量TECSERT
 tecreset=$(tput sgr0)
-
+datetime=$(date "+%Y-%m-%d %H:%M:%S")
+echo -e "\033[36m "-----------------"$datetime"-------------------" \033[0m"
 # 检查是否连接到互联网
 ping -c 1 www.baidu.com &> /dev/null && echo -e '\E[32m'"互联网连通性: $tecreset 已连接" || echo -e '\E[32m'"Internet: $tecreset 未连接"
 
@@ -119,4 +120,4 @@ rm /tmp/osrelease /tmp/who /tmp/ramcache /tmp/diskusage
 }
 fi
 shift $(($OPTIND -1))
-
+echo -e "\033[36m "-----------------"$datetime"-------------------" \033[0m"
