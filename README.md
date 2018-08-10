@@ -68,3 +68,17 @@ oracle常用规则函数<br>
 # 8.名称：sysctl.conf<br>
 linux内核优化参考<br>
 使用方法：请参考脚本注释<br>
+
+# 9.脚本名称：monitor_ch.sh<br>
+(中文版)监控服务器互联网连通性、操作系统类型、内存、CPU、硬盘等情况<br>
+使用方法：下载脚本到服务器，授权chmod 755 -R monitor_ch.sh<br>
+直接使用方法：./monitor_ch.sh
+若需要安装版本：执行./monitor_ch.sh -i,安装之后可以再任何目录下执行monitor<br>
+若报错 mpstat: command not found,请执行yum install -y sysstat<br>
+
+# 10.脚本名称：monitor_en.sh<br>
+(英文版)监控服务器互联网连通性、操作系统类型、内存、CPU、硬盘等情况<br>
+使用方法：下载脚本到服务器，授权chmod 755 -R monitor_en.sh<br>
+直接使用方法：./monitor_en.sh
+若需要安装版本：执行./monitor_en.sh -i,安装之后可以再任何目录下执行monitor<br>
+若报错 mpstat: command not found,请执行yum install -y sysstat<br>
