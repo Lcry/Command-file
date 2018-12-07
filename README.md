@@ -82,3 +82,6 @@ linux内核优化参考<br>
 直接使用方法：./monitor_en.sh
 若需要安装版本：执行./monitor_en.sh -i,安装之后可以再任何目录下执行monitor<br>
 若报错 mpstat: command not found,请执行yum install -y sysstat<br>
+
+# 11.脚本名称：unixbench.sh<br>
+自动安装UnixBench一键跑分
