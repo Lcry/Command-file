@@ -84,4 +84,9 @@ linux内核优化参考<br>
 若报错 mpstat: command not found,请执行yum install -y sysstat<br>
 
 # 11.脚本名称：unixbench.sh<br>
-自动安装UnixBench一键跑分
+自动安装UnixBench一键跑分<br>
+
+# 12.脚本名称：WandOactivationV1.0.bat<br>
+一键激活windows、Office全套、激活直接打开按照提示运行即可<br>
+
+
