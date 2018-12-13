@@ -511,7 +511,7 @@ if DEFINED _Office%1Path (
 cd /d "%~dp0"
 echo.
 echo. 操作已完成！按任意键返回开始菜单。
-pause>null
+pause>nul
 goto begin
 )
 cd /d "%~dp0"
