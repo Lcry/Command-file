@@ -1,4 +1,5 @@
-#! /bin/bash
+#! /bin/bash 
+# by：Lcry site:www.51it.wang
 
 # 清屏
 clear
