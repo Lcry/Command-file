@@ -21,7 +21,7 @@ then
 wd=$(pwd)
 basename "$(test -L "$0" && readlink "$0" || echo "$0")" > /tmp/scriptname
 scriptname=$(echo -e -n $wd/ && cat /tmp/scriptname)
-su -c "cp $scriptname /usr/bin/monitor" root && echo "祝贺你！脚本安装，现在可以执行 [monitor]命令监控服务器了" || echo "安装失败！"
+su -c "cp $scriptname /usr/bin/monitor" root && echo "祝贺你！脚本安装成功，现在可以执行 [monitor]命令监控服务器了，by:Lcry ,Site:www.51it.wang" || echo "安装失败！"
 }
 fi
 
