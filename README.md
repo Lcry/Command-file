@@ -90,3 +90,12 @@ linux内核优化参考<br>
 一键激活windows、Office全套、激活直接打开按照提示运行即可<br>
 
 
+# 13.脚本名称：centos7init.sh<br>
+CentOS7生产环境优化脚本：网络配置、主机名配置、yum源更新、时钟同步、内核参数配置、语言时区、关闭SELINUX、防火墙、SSH 参数配置，可参考脚本自行新增或删除不需要的信息，参考互联网并亲测<br>
+
+使用方法：下载脚本到服务器，root用户执行sh centos7init.sh 你要设置的主机名<br>
+
+一键命令：```curl -O https://raw.githubusercontent.com/Lcry/Command-file/master/centos7init.sh && sh centos7init.sh lcryCentos7```
+
+
+
