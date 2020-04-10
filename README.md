@@ -95,7 +95,13 @@ CentOS7生产环境优化脚本：网络配置、主机名配置、yum源更新�
 
 使用方法：下载脚本到服务器，root用户执行sh centos7init.sh 你要设置的主机名<br>
 
-一键命令：```curl -O https://raw.githubusercontent.com/Lcry/Command-file/master/centos7init.sh && sh centos7init.sh lcryCentos7```
+一键命令：
+
+`curl -O https://raw.githubusercontent.com/Lcry/Command-file/master/centos7init.sh && sh centos7init.sh lcryCentos7`
+
+或者
+
+`wget -N --no-check-certificate https://raw.githubusercontent.com/Lcry/Command-file/master/centos7init.sh && sh centos7init.sh lcryCentos7 `
 
 
 
