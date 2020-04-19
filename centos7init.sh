@@ -165,11 +165,12 @@ source  /etc/locale.conf
 }
 
 
-#关闭SELINUX disable selinux
+#SET SELINUX=DISABLED	关闭SELINUX 
 selinux_config(){
-sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-setenforce 0
-sleep 1
+#sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+	sed -ri '/^SELINUX=/cSELINUX=disabled' /etc/selinux/config
+	setenforce 0 &>/dev/null
+	sleep 1
 }
 
 #日志处理
@@ -189,9 +190,10 @@ firewalld_config(){
 
 # SSH配置优化 set sshd_config
 sshd_config(){
-if [ ! -f "/etc/ssh/sshd_config.bak" ]; then
-    cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-fi
+#if [ ! -f "/etc/ssh/sshd_config.bak" ]; then
+#    cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+#fi
+cp -a centos7init.sh centos7init.sh.`date +%Y%m%d%H%M%S`_bak
 
 cat >/etc/ssh/sshd_config<<EOF
 Port 22
