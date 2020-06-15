@@ -228,7 +228,7 @@ ipv6_config(){
 echo "NETWORKING_IPV6=no">/etc/sysconfig/network
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
-echo "127.0.0.1   localhost   localhost.localdomain">/etc/hosts
+#echo "127.0.0.1   localhost   localhost.localdomain">/etc/hosts
 #sed -i 's/IPV6INIT=yes/IPV6INIT=no/g' /etc/sysconfig/network-scripts/ifcfg-enp0s8
 
 
