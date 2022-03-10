@@ -1,9 +1,9 @@
 linux脚本说明：
 脚本统一路径：
-https://raw.githubusercontent.com/Lcry/Command-file/master/（此处填脚本名）<br>
+https://raw.githubusercontent.com/Lcry/Command-file/master/linux/（此处填脚本名）<br>
 例子：
-https://raw.githubusercontent.com/Lcry/Command-file/master/mysqlbak.sh<br>执行：
-```wget -N --no-check-certificate https://raw.githubusercontent.com/Lcry/Command-file/linux/master/mysqlbak.sh && bash mysqlbak.sh```<br><br>
+https://raw.githubusercontent.com/Lcry/Command-file/master/linux//mysqlbak.sh<br>执行：
+```wget -N --no-check-certificate https://raw.githubusercontent.com/Lcry/Command-file/master/linux/mysqlbak.sh && bash mysqlbak.sh```<br><br>
 
 ## 1.脚本名称：oraclebak.sh<br>
 
@@ -74,8 +74,8 @@ CentOS7生产环境优化脚本：网络配置、主机名配置、yum源更新�
 
 一键命令：
 
-`curl -O https://raw.githubusercontent.com/Lcry/Command-file/linux/master/centos7init.sh && sh centos7init.sh lcryCentos7`
+`curl -O https://raw.githubusercontent.com/Lcry/Command-file/master/linux/centos7init.sh && sh centos7init.sh lcryCentos7`
 
 或者
 
-`wget -N --no-check-certificate https://raw.githubusercontent.com/Lcry/Command-file/linux//master/centos7init.sh && sh centos7init.sh lcryCentos7 `
+`wget -N --no-check-certificate https://raw.githubusercontent.com/Lcry/Command-file/master/linux/centos7init.sh && sh centos7init.sh lcryCentos7 `
