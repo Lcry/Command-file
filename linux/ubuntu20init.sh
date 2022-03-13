@@ -56,7 +56,7 @@ set_sshd(){
 echo "2. 设置sshd"
 ## 若不存在则先备份一下
 if [ ! -f "/etc/ssh/sshd_config.backup" ]; then
-  cp -ra/etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+  cp -ra /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
 fi
 ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
 sed -i -e 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' \
