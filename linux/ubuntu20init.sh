@@ -1,18 +1,19 @@
 #!/bin/bash
 # 食用方法: bash ubuntu20init.sh
-# Ubuntu20.x生产环境优化脚本:
+# Ubuntu20.x~22.x生产环境优化脚本:
 # 设置hostname
-# 设置sshd修改默认端口
+# 设置sshd修改默认端口为22122
 # 优化内核参数
 # 设置时区为 Asia/Shanghai
-# 切换阿里源
+# 切换阿里源（可选）
 # 关闭防火墙和Selinux
-# 关闭swap
+# 关闭swap（可选）
 # 设置 alias
 # 安装 docker
 # 安装 docker compose
-# 处理dns
+# 处理dns（可选）
 # by lcry @ https://github.com/lcry
+# by blog: https://www.51it.wang
 
 # 检查是否为root用户，脚本必须在root权限下运行
 if [ "$(whoami)" != "root" ]; then
@@ -263,7 +264,7 @@ tee /etc/docker/daemon.json <<-'EOF'
     },
     "registry-mirrors":[
         "https://dj94z8xi.mirror.aliyuncs.com",
-        "http://f1361db2.m.daocloud.io",
+        "https://0b27f0a81a00f3560fbdc00ddd2f99e0.mirror.swr.myhuaweicloud.com"
         "https://docker.mirrors.ustc.edu.cn"
     ]
 }
@@ -273,9 +274,9 @@ EOF
  systemctl enable docker
 }
 
-# 安装docker-compose ## 参考地址：http://get.daocloud.io/#install-compose
+# 安装docker-compose ## 下载最新地址：https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-linux-x86_64
 install_docker_compose(){
-curl -L https://get.daocloud.io/docker/compose/releases/download/v2.3.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 }
@@ -298,21 +299,21 @@ cat << EOF
 EOF
 }
 
-# 入口
+# 入口 可选更新镜像、关闭swap、dns
 main(){
     set_hostname
     set_sshd
+#    update_mirror
     apt_tools
     set_timezone
-    update_mirror
     linux_optimize1
     linux_optimize2
     set_firewalld_selinux
-    close_swap
+#    close_swap
     set_user_profile
     install_docker
     install_docker_compose
-    set_dns
+#    set_dns
     ok
 }
 main
