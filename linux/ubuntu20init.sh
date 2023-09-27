@@ -264,7 +264,7 @@ tee /etc/docker/daemon.json <<-'EOF'
     },
     "registry-mirrors":[
         "https://dj94z8xi.mirror.aliyuncs.com",
-        "https://0b27f0a81a00f3560fbdc00ddd2f99e0.mirror.swr.myhuaweicloud.com"
+        "https://0b27f0a81a00f3560fbdc00ddd2f99e0.mirror.swr.myhuaweicloud.com",
         "https://docker.mirrors.ustc.edu.cn"
     ]
 }
